@@ -1,0 +1,7 @@
+[workspace]
+
+members = [
+    "ppm_gen",
+    "raytracer",
+    "async_samples"
+]
