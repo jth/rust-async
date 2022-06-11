@@ -7,4 +7,12 @@ edition = "2021"
 
 [dependencies]
 clap = { version = "3.1.18", features = ["derive"] }
+tokio = { version = "1.19.2", features = ["full"] }
 num_cpus = "1.13.1"
+
+[dev-dependencies]
+criterion = { version = "0.3.5", features = ["async_tokio"] }
+
+[[bench]]
+name = "ppm_gen_bench"
+harness = false
