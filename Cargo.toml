@@ -5,3 +5,6 @@ members = [
     "raytracer",
     "async_samples"
 ]
+
+[profile.release]
+debug = true

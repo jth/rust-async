@@ -8,16 +8,21 @@ pub async fn generate_image_data(
     } else {
         num_threads
     };
-    let mut result: Vec<(i32, i32, i32)> = Vec::with_capacity(image_width * image_height);
+    let mut result: Vec<(i32, i32, i32)> = Vec::new();
     match partition(image_height, num_threads) {
         Ok(partitions) => {
+            result.reserve(partitions.len());
             let mut handles = Vec::with_capacity(partitions.len());
             for p in partitions {
                 handles.push(tokio::spawn(async move {
                     render_chunk(image_width, image_height, p.0, p.1).await
                 }));
             }
-            // No difference between parallel and sequential!?
+            // Work-load is too trivial, building the result vector takes significat more time
+            // than the actual calculation. Returning a Vec<Vec<(i32,i32,32)>> might be the 
+            // best solution here.
+            // Profiling:
+            //   cargo instruments --release --template "CPU Profiler" --bin ppm_gen -- -w 8196 -h 8196
             for handle in handles {
                 result.append(&mut handle.await.unwrap());
             }
